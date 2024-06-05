@@ -1,0 +1,12 @@
+{% extends 'training/base.html' %}
+
+{% block content %}
+<h3>Entrenamiento</h3>
+
+<p>Elige un modo de entrenamiento:</p>
+<ul>
+    <li><a href="{% url 'developer_mode' %}">Modo Desarrollador</a></li>
+    <li><a href="{% url 'automatic_mode' %}">Modo Automático</a></li>
+</ul>
+
+{% endblock %}
