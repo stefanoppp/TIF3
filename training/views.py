@@ -15,7 +15,8 @@ def developer_mode(request):
 
 @login_required
 def automatic_mode(request):
-    return render(request, "training/automatic_mode.html")
+    resultado=4
+    return render(request, "training/automatic_mode.html", {'result': resultado})
 
 def exit(request):
     logout(request)
