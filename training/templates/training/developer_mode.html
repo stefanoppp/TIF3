@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,30 +9,42 @@
 <body>
     <div class="container mt-5">
         <h2>Selecciona un Modelo de IA</h2>
-        <form id="ai-model-form">
+        <form id="ai-model-form" action="{% url 'process_developer_mode' %}" method="post">
+            {% csrf_token %}
             <div class="form-group">
-                <label for="modelSelect">Tecnica de aprendizaje</label>
+                <label for="modelSelect">Técnica de aprendizaje</label>
                 <select class="form-control" id="modelSelect" required>
-                    <option value="">Selecciona un modelo</option>
+                    <option value="">Selecciona la técnica</option>
                     <option value="regression">Regresión</option>
                     <option value="timeSeries">Series Temporales</option>
-                    <option value="anomalyDetection">Detección de Anomalías</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="modelParameters">Parámetros del Modelo</label>
+                <label for="modelParameters">Parámetro del Modelo</label>
                 <select class="form-control" id="modelParameters" required>
                     <option value="" selected>Selecciona un parámetro</option> 
                 </select>
             </div>
+            <div class="form-group">
+                <label for="testPercentage">Porcentaje de test</label>
+                <label for="testPercentage">(0.05 a 0.5 para regresión // 0 a 0.25 para series temporales)</label>
+                <input type="number" class="form-control" id="testPercentage" step="0.01" min="0" max="1" placeholder="Ingrese el porcentaje" required>
+            </div>
             <button type="submit" class="btn btn-primary">Enviar</button>
         </form>
+        {% if result %}
+            <div>
+                <h5>El resultado es:</h5>
+                    {{ result }}
+            </div>
+        {% endif %}
     </div>
 
     <script>
         document.getElementById('modelSelect').addEventListener('change', function() {
             const model = this.value;
             const modelParameters = document.getElementById('modelParameters');
+            const testPercentage = document.getElementById('testPercentage');
 
             let options = '';
             switch (model) {
@@ -42,7 +54,15 @@
                         <option value="ridge">Regresión Ridge ('ridge')</option>
                         <option value="lasso">Regresión Lasso ('lasso')</option>
                         <option value="dt">Árbol de Decisión ('dt')</option>
+                        <option value="gbr">Regresión de Incremento de Gradiente ('gbr')</option>
+                        <option value="rf">Regresión de Bosque Aleatorio ('rf')</option>
+                        <option value="en">Regresión Elastic Net ('en')</option>
+                        <option value="br">Regresión Ridge Bayesiana ('br')</option>
+                        <option value="huber">Regresor Huber ('huber')</option>
+                        <option value="lightgbm">LightGBM ('lightgbm')</option>
                     `;
+                    testPercentage.min = 0.05;
+                    testPercentage.max = 0.5;
                     break;
                 case 'timeSeries':
                     options += `
@@ -50,18 +70,17 @@
                         <option value="ets">Suavizado Exponencial ('ets')</option>
                         <option value="arima">ARIMA ('arima')</option>
                         <option value="theta">Theta ('theta')</option>
+                        <option value="tbats">TBATS ('tbats')</option>
+                        <option value="exp_smooth">Suavizado Exponencial Simple ('exp_smooth')</option>
+                        <option value="tbats">TBATS ('tbats')</option>
                     `;
-                    break;
-                case 'anomalyDetection':
-                    options += `
-                        <option value="iforest" selected>Isolation Forest ('iforest')</option>
-                        <option value="knn">K-Nearest Neighbors ('knn')</option>
-                        <option value="pca">Principal Component Analysis ('pca')</option>
-                        <option value="mcd">Minimum Covariance Determinant ('mcd')</option>
-                    `;
+                    testPercentage.min = 0;
+                    testPercentage.max = 0.25;
                     break;
                 default:
                     options += '<option value="" selected>Selecciona un parámetro</option>';
+                    testPercentage.min = 0;
+                    testPercentage.max = 1;
             }
 
             modelParameters.innerHTML = options;

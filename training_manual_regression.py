@@ -23,15 +23,15 @@ class RegressionModel:
 
 # Leer los datos
 all_data = pd.read_csv('datasettif.csv')
-regresiones=["lr", "ridge", "lasso", "dt"]
+regresiones=["lr", "ridge", "lasso", "dt", "gbr", "rf", "en","br", "huber","lightgbm"]
 # Definir el tamaño de prueba y entrenar el modelo de regresión
-test_porcentage = 0.1
+test_porcentage = 0.05
 
 train_porcentage=1-test_porcentage
-
+    
 # Instanciar y entrenar el modelo de regresión lineal
 model_regression = RegressionModel(all_data) 
-predictions, metrics = model_regression.start_model("lasso", train_porcentage)
+predictions, metrics = model_regression.start_model("lightgbm", train_porcentage)
 
 # Imprimir las predicciones y las métricas
 print("Predicciones:")
