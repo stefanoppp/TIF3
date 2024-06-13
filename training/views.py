@@ -14,35 +14,28 @@ def train(request):
 
 @login_required
 def developer_mode(request):
-    # Si la petición es GET, renderiza la plantilla
-    if request.method == 'GET':
-        return render(request, "training/developer_mode.html")
-    
-    # Si la petición es POST, redirige a process_developer_mode
-    elif request.method == 'POST':
-        return redirect('process_developer_mode')
+    if request.method == 'POST':
+        model_select = request.POST.get('modelSelect')
+        model_parameters = request.POST.getlist('modelParameters')
+        test_percentage = request.POST.get('testPercentage')
+        return render(request, "training/process_developer_mode.html", {
+            'model_select': model_select,
+            'model_parameters': model_parameters,
+            'test_percentage': test_percentage
+        })
+    return render(request, "training/developer_mode.html")
 
 @login_required
 def process_developer_mode(request):
-    # Si la petición es POST, procesa el formulario
     if request.method == 'POST':
         model_select = request.POST.get('modelSelect')
-        model_parameters = request.POST.get('modelParameters')
+        model_parameters = request.POST.getlist('modelParameters')
         test_percentage = request.POST.get('testPercentage')
-
-        # Realiza el entrenamiento del modelo aquí
-        # ... (tu lógica de entrenamiento basada en model_select, model_parameters, test_percentage)
-
-        # Ejemplo de resultado (reemplázalo con tu lógica de entrenamiento)
         result = f"Modelo: {model_select}, Parámetros: {model_parameters}, Porcentaje de prueba: {test_percentage}"
-
         return render(request, "training/process_developer_mode.html", {
             'result': result
         })
-
-    # Si la petición no es POST, renderiza la plantilla (este caso no debería suceder, ya que solo rediriges a process_developer_mode)
-    else:
-        return render(request, "training/developer_mode.html")
+    return render(request, "training/developer_mode.html")
 
 @login_required
 def automatic_mode(request):
