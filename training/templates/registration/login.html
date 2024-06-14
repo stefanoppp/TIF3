@@ -2,28 +2,55 @@
 
 {% block content %}
 <section class="vh-100 gradient-custom">
-<style>
+  <style>
     .gradient-custom {
-    /* fallback for old browsers */
-    background: #6a11cb;
-    
-    /* Chrome 10-25, Safari 5.1-6 */
-    background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
-    
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
+      /* fallback for old browsers */
+      background: #049841;
+
+      /* Chrome 10-25, Safari 5.1-6 */
+      background: -webkit-linear-gradient(to right, rgb(23, 203, 17), rgba(37, 117, 252, 1));
+
+      /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+      background: linear-gradient(to right, rgb(17, 203, 70), rgb(2, 115, 64));
     }
-</style>
+
+    .form-control-lg {
+      max-width: 250px; /* Ajusta este valor según tus necesidades */
+      margin: 0 auto; /* Centrar el input */
+    }
+
+    .form-outline.mb-6, 
+    .form-outline.mb-4.mt-4 {
+      padding-bottom: 20px; /* Separación entre inputs */
+    }
+
+    .form-outline.mb-4.mt-4 {
+      padding-bottom: 30px; /* Espacio extra abajo del último input */
+    }
+
+    .fw-bold.mb-2.text-uppercase {
+      color: white; /* Cambia el color a blanco */
+      font-family: 'Poppins', sans-serif; /* Elige una fuente amigable */
+      font-weight: bold; /* Agrega negrita */
+    }
+
+    .text-white-50.mb-5 {
+      color: white; /* Cambia el color a blanco */
+      font-family: 'Open Sans', sans-serif; /* Elige una fuente amigable */
+    }
+
+    /* Estilos para las fuentes de Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+  </style>
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+      <div class="col-md-auto">
         <div class="card bg-dark text-white" style="border-radius: 1rem;">
           <div class="card-body p-5 text-center">
-
             <div class="mb-md-5 mt-md-4 pb-5">
-
-              <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
-              <p class="text-white-50 mb-5">Please enter your login and password!</p>
+              <h2 class="fw-bold mb-2 text-uppercase font-weight-bold">Login</h2> 
+              <p class="text-white-50 mb-5">Digite su usuario y clave</p>
 
               <form method="post" action="">
                 {% csrf_token %}
@@ -35,12 +62,9 @@
                   <input type="password" id="typePassword" name="password" class="form-control form-control-lg" placeholder="Clave" required />
                 </div>
 
-
                 <button class="btn btn-outline-light btn-lg px-5 mb-5" type="submit">Ingresar</button>
               </form>
-
             </div>
-
           </div>
         </div>
       </div>
