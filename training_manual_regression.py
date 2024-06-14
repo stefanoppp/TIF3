@@ -1,7 +1,4 @@
 from pycaret.regression import *
-import numpy as np
-import pandas as pd
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
 class RegressionModel:
     def __init__(self, data) -> None:
@@ -21,20 +18,4 @@ class RegressionModel:
         
         return predictions, metrics
 
-# Leer los datos
-all_data = pd.read_csv('datasettif.csv')
-regresiones=["lr", "ridge", "lasso", "dt", "gbr", "rf", "en","br", "huber","lightgbm"]
-# Definir el tamaño de prueba y entrenar el modelo de regresión
-test_porcentage = 0.05
-
-train_porcentage=1-test_porcentage
-    
-# Instanciar y entrenar el modelo de regresión lineal
-model_regression = RegressionModel(all_data) 
-predictions, metrics = model_regression.start_model("lightgbm", train_porcentage)
-
-# Imprimir las predicciones y las métricas
-print("Predicciones:")
-print(predictions)
-print("\nMétricas:")
-print(metrics)
+# regresiones=["lr", "ridge", "lasso", "dt", "gbr", "rf", "en","br", "huber","lightgbm"]

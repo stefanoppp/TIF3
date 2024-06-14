@@ -9,48 +9,42 @@
 <body>
     <div class="container mt-5">
         <h2>Selecciona un Modelo de IA</h2>
-        <form id="ai-model-form" action="{% url 'process_developer_mode' %}" method="post">
+        <form id="ai-model-form" method="POST" action="{% url 'process_developer_mode' %}">
             {% csrf_token %}
             <div class="form-group">
-                <label for="modelSelect">Técnica de aprendizaje</label>
-                <select class="form-control" id="modelSelect" required>
+                <label for="id_model_select">Técnica de aprendizaje</label>
+                <select class="form-control" id="id_model_select" name="model_select" required>
                     <option value="">Selecciona la técnica</option>
                     <option value="regression">Regresión</option>
                     <option value="timeSeries">Series Temporales</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="modelParameters">Parámetro del Modelo</label>
-                <select class="form-control" id="modelParameters" required>
+                <label for="id_model_parameters">Parámetros del Modelo</label>
+                <select class="form-control" id="id_model_parameters" name="model_parameters" required>
                     <option value="" selected>Selecciona un parámetro</option> 
                 </select>
             </div>
             <div class="form-group">
-                <label for="testPercentage">Porcentaje de test</label>
-                <label for="testPercentage">(0.05 a 0.5 para regresión // 0 a 0.25 para series temporales)</label>
-                <input type="number" class="form-control" id="testPercentage" step="0.01" min="0" max="1" placeholder="Ingrese el porcentaje" required>
+                <label for="id_test_percentage">Porcentaje de test</label>
+                <label for="id_test_percentage">(0.05 a 0.5 para regresión // 0 a 0.25 para series temporales)</label>
+                <input type="number" class="form-control" id="id_test_percentage" name="test_percentage" step="0.01" min="0" max="1" placeholder="Ingrese el porcentaje" required>
             </div>
             <button type="submit" class="btn btn-primary">Enviar</button>
         </form>
-        {% if result %}
-            <div>
-                <h5>El resultado es:</h5>
-                    {{ result }}
-            </div>
-        {% endif %}
     </div>
 
     <script>
-        document.getElementById('modelSelect').addEventListener('change', function() {
+        document.getElementById('id_model_select').addEventListener('change', function() {
             const model = this.value;
-            const modelParameters = document.getElementById('modelParameters');
-            const testPercentage = document.getElementById('testPercentage');
+            const modelParameters = document.getElementById('id_model_parameters');
+            const testPercentage = document.getElementById('id_test_percentage');
 
             let options = '';
             switch (model) {
                 case 'regression':
-                    options += `
-                        <option value="lr" selected>Regresión Lineal ('lr')</option>
+                    options = `
+                        <option value="lr">Regresión Lineal ('lr')</option>
                         <option value="ridge">Regresión Ridge ('ridge')</option>
                         <option value="lasso">Regresión Lasso ('lasso')</option>
                         <option value="dt">Árbol de Decisión ('dt')</option>
@@ -65,20 +59,19 @@
                     testPercentage.max = 0.5;
                     break;
                 case 'timeSeries':
-                    options += `
-                        <option value="naive" selected>Modelo Naive ('naive')</option>
+                    options = `
+                        <option value="naive">Modelo Naive ('naive')</option>
                         <option value="ets">Suavizado Exponencial ('ets')</option>
                         <option value="arima">ARIMA ('arima')</option>
                         <option value="theta">Theta ('theta')</option>
                         <option value="tbats">TBATS ('tbats')</option>
                         <option value="exp_smooth">Suavizado Exponencial Simple ('exp_smooth')</option>
-                        <option value="tbats">TBATS ('tbats')</option>
                     `;
                     testPercentage.min = 0;
                     testPercentage.max = 0.25;
                     break;
                 default:
-                    options += '<option value="" selected>Selecciona un parámetro</option>';
+                    options = '<option value="">Selecciona un parámetro</option>';
                     testPercentage.min = 0;
                     testPercentage.max = 1;
             }
