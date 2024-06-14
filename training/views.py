@@ -47,8 +47,6 @@ def developer_mode(request):
                 test_size = int(test_percentage * len(price_data))
                 predictions, metrics = t_series_model.start_model(model_parameters, 10, test_size)
 
-            # Generar el gráfico de predicciones
-            # Renderizar la página de resultados con los datos obtenidos
             return render(request, "training/process_developer_mode.html", {
                 'model_select': model_select,
                 'model_parameters': model_parameters,

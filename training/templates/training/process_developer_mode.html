@@ -1,84 +1,54 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resultados del Modelo</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Agrega los estilos adicionales que necesites -->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
+    <title>Developer Mode</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-
 <body>
-    <div class="container mt-5">
-        <h2>Resultados del Modelo</h2>
-        <div>
-            <p><strong>Tipo de aprendizaje:</strong> {{ model_select }}</p>
-            <p><strong>Modelo elegido:</strong> {{ model_parameters }}</p>
-            <p><strong>Porcentaje de Testing:</strong> {{ test_percentage }}</p>
-        </div>
-        <div>
-            <h3>Predicciones</h3>
-            {% if not predictions.empty %}
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Fecha</th>
-                        {% if 'aceitunas' in predictions.columns %}
-                        <th>Aceitunas</th>
-                        {% endif %}
-                        {% if 'inflacion' in predictions.columns %}
-                        <th>Inflación</th>
-                        {% endif %}
-                        <th>Precio</th>
-                        <th>Predicción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for index, row in predictions.iterrows %}
-                    <tr>
-                        <td>{{ index }}</td>
-                        <td>{{ row.fecha }}</td>
-                        {% if 'aceitunas' in predictions.columns %}
-                        <td>{{ row.aceitunas }}</td>
-                        {% endif %}
-                        {% if 'inflacion' in predictions.columns %}
-                        <td>{{ row.inflacion }}</td>
-                        {% endif %}
-                        <td>{{ row.precio }}</td>
-                        <td>{{ row.prediction_label }}</td>
-                    </tr>
+    <div class="container">
+        <h1 class="mt-4">Developer Mode</h1>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <h2>Tipo de aprendizaje: {{ model_select }}</h2>
+                <h2>Algoritmo empleado: {{ model_parameters }}</h2>
+                <h2>Porcentaje de testing: {{ test_percentage }}</h2>
+            </div>
+            <div class="col-md-6">
+                <h3>Metricas:</h3>
+                <ul class="list-group">
+                    {% for key, value in metricas.items %}
+                        <li class="list-group-item">{{ key }}: {{ value }}</li>
                     {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <p>No hay datos de predicción disponibles.</p>
-            {% endif %}
+                </ul>
+            </div>
         </div>
-        <div>
-            <h3>Métricas</h3>
-            {% if not metricas.empty %}
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        {% for column in metricas.columns %}
-                        <th>{{ column }}</th>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <h3>Predicciones:</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Index</th>
+                            <th>Prediccion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for index, prediction in predictions.iterrows %}
+                            <tr>
+                                <td>{{ index }}</td>
+                                <td>{{ prediction }}</td>
+                            </tr>
                         {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        {% for value in metricas.values.0 %}
-                        <td>{{ value }}</td>
-                        {% endfor %}
-                    </tr>
-                </tbody>
-            </table>
-            {% else %}
-            <p>No hay datos de métricas disponibles.</p>
-            {% endif %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
