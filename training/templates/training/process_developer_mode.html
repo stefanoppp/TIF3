@@ -5,22 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultados del Modelo</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Agrega los estilos adicionales que necesites -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> 
 </head>
+
 <body>
     <div class="container mt-5">
         <h2>Resultados del Modelo</h2>
         <div>
-            <p><strong>Modelo Seleccionado:</strong> {{ model_select }}</p>
-            <p><strong>Parámetros del Modelo:</strong> {{ model_parameters }}</p>
-            <p><strong>Porcentaje de Test:</strong> {{ test_percentage }}</p>
+            <p><strong>Tipo de aprendizaje:</strong> {{ model_select }}</p>
+            <p><strong>Modelo elegido:</strong> {{ model_parameters }}</p>
+            <p><strong>Porcentaje de Testing:</strong> {{ test_percentage }}</p>
         </div>
         <div>
             <h3>Predicciones</h3>
-            {{ predictions|safe }}
+            {% if not predictions.empty %}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        {% if 'aceitunas' in predictions.columns %}
+                        <th>Aceitunas</th>
+                        {% endif %}
+                        {% if 'inflacion' in predictions.columns %}
+                        <th>Inflación</th>
+                        {% endif %}
+                        <th>Precio</th>
+                        <th>Predicción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, row in predictions.iterrows %}
+                    <tr>
+                        <td>{{ index }}</td>
+                        <td>{{ row.fecha }}</td>
+                        {% if 'aceitunas' in predictions.columns %}
+                        <td>{{ row.aceitunas }}</td>
+                        {% endif %}
+                        {% if 'inflacion' in predictions.columns %}
+                        <td>{{ row.inflacion }}</td>
+                        {% endif %}
+                        <td>{{ row.precio }}</td>
+                        <td>{{ row.prediction_label }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No hay datos de predicción disponibles.</p>
+            {% endif %}
         </div>
         <div>
-            <h3>Metricas</h3>
-            {{ metricas|safe }}
+            <h3>Métricas</h3>
+            {% if not metricas.empty %}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        {% for column in metricas.columns %}
+                        <th>{{ column }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for value in metricas.values.0 %}
+                        <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+            {% else %}
+            <p>No hay datos de métricas disponibles.</p>
+            {% endif %}
         </div>
     </div>
 </body>

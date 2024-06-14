@@ -6,11 +6,15 @@ from training_time_series import main
 from training_manual_regression import RegressionModel
 from training_manual_tseries import TimeSeries
 
-import plotly.graph_objects as go
-import plotly.io as pio
 from .forms import ModelSelectionForm
 
+import plotly.graph_objects as go
+import plotly.io as pio  # Elimina esta línea
+
+import json
+from plotly.utils import PlotlyJSONEncoder  # Importa la clase PlotlyJSONEncoder
 import pandas as pd
+
 def home(request):
     return render(request, "training/home.html")
 
@@ -43,21 +47,21 @@ def developer_mode(request):
                 test_size = int(test_percentage * len(price_data))
                 predictions, metrics = t_series_model.start_model(model_parameters, 10, test_size)
 
+            # Generar el gráfico de predicciones
             # Renderizar la página de resultados con los datos obtenidos
             return render(request, "training/process_developer_mode.html", {
                 'model_select': model_select,
                 'model_parameters': model_parameters,
                 'test_percentage': test_percentage,
                 'metricas': metrics,
-                'predictions': predictions
+                'predictions': predictions,
             })
     else:
         form = ModelSelectionForm()
     
     return render(request, "training/developer_mode.html", {'form': form})
 
-    
-    return render(request, "training/developer_mode.html", {'form': form})
+
 
 @login_required
 def process_developer_mode(request):
