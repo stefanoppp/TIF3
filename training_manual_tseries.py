@@ -12,7 +12,6 @@ class TimeSeries:
         model_time_series = create_model(modeltype)
         predictions = predict_model(model_time_series, fh=n_periodos)
 
-        # Obtener las predicciones del modelo
         predictions_df = predict_model(model_time_series)
         y_pred = predictions_df['y_pred']
 
@@ -38,6 +37,8 @@ class TimeSeries:
         return predictions, metrics
 
 # time=["naive", "ets", "arima", "theta","tbats", "exp_smooth", "tbats"]
+
+# Para probar la clase
 
 # all_data = pd.read_csv('datasettif.csv')
 # all_data['fecha'] = pd.to_datetime(all_data['fecha'])
