@@ -27,13 +27,35 @@ def developer_mode(request):
             model_parameters = form.cleaned_data['model_parameters']
             test_percentage = form.cleaned_data['test_percentage']
 
+            # Solo cargar los datos cuando se envía el formulario
+            all_data = pd.read_csv('datasettif.csv')
+            all_data['fecha'] = pd.to_datetime(all_data['fecha'])
+
+            # Lógica para el entrenamiento del modelo basado en la selección del usuario
+            if model_select == "regression":
+                regresor_model = RegressionModel(all_data)
+                train_percentage = 1 - test_percentage
+                predictions, metrics = regresor_model.start_model(model_parameters, train_percentage)
+
+            else:
+                price_data = all_data['precio']
+                t_series_model = TimeSeries(price_data)
+                test_size = int(test_percentage * len(price_data))
+                predictions, metrics = t_series_model.start_model(model_parameters, 10, test_size)
+
+            # Renderizar la página de resultados con los datos obtenidos
             return render(request, "training/process_developer_mode.html", {
-                'form': model_select,
-                'predictions': model_parameters,
-                'metrics': test_percentage
+                'model_select': model_select,
+                'model_parameters': model_parameters,
+                'test_percentage': test_percentage,
+                'metricas': metrics,
+                'predictions': predictions
             })
     else:
         form = ModelSelectionForm()
+    
+    return render(request, "training/developer_mode.html", {'form': form})
+
     
     return render(request, "training/developer_mode.html", {'form': form})
 
@@ -45,15 +67,31 @@ def process_developer_mode(request):
             model_select = form.cleaned_data['model_select']
             model_parameters = form.cleaned_data['model_parameters']
             test_percentage = form.cleaned_data['test_percentage']
+            all_data = pd.read_csv('datasettif.csv')
+            all_data['fecha'] = pd.to_datetime(all_data['fecha'])
+
+            if model_select=="regression":
+                regresor_model=RegressionModel(all_data)
+                print("Procesando modelo...")
+                train_percentage=1-test_percentage
+                predictions, metrics=regresor_model.start_model(model_parameters, train_percentage)
+
+            else:
+                price_data = all_data['precio']
+                t_series_model=TimeSeries(price_data)
+                test_size=int(test_percentage*len(price_data))
+                predictions, metrics=t_series_model.start_model(model_parameters, 10, test_size)
 
             return render(request, "training/process_developer_mode.html", {
                 'model_select': model_select,
                 'model_parameters': model_parameters,
                 'test_percentage': test_percentage,
+                'metricas': metrics,
+                'predictions':predictions
             })
-
-    # Si no se recibió un formulario válido, redirigir a otra página o manejar el error de alguna manera
     return render(request, "training/developer_mode.html")
+
+
 @login_required
 def automatic_mode(request):
     predictions = main()  
